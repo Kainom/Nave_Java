@@ -2,12 +2,11 @@ package code;
 
 import java.util.Random;
 
+import jplay.Sound;
 import jplay.Window;
 
 public class Nave extends Ator {
-    private Double position = 0d;
-    private Random gerador = new Random();
-    private boolean visivel = true;
+    private boolean visible = true;
     private Integer tipo;
     private static final String vet[] = { "src/resource/img/nave.png",
             "/home/kainom/meusprojetos/game_nave/src/resource/img/inimigo.png" };
@@ -16,61 +15,55 @@ public class Nave extends Ator {
         super(vet[enemie], 1);
         this.x = x;
         this.y = y;
-        this.visivel = false;
+        this.visible = false;
         this.tipo = tipo;
     }
 
     public boolean isVisible() {
-        return visivel;
+        return visible;
     }
 
-    public void setVisivel(boolean visivel) {
-        this.visivel = visivel;
+    public void setVisible(boolean visivel) {
+        this.visible = visivel;
+
     }
 
     public void atingido() {
-        this.visivel = false;
+        this.visible = false;
+        tipo = random(2).intValue();
     }
 
     public void posiciona(Integer firtsGame) {
         if (firtsGame == 1)
             this.x = 1400;
-        this.x = 700;
-        this.y = this.random(520).intValue();
-    }
-
-    public Double random(Integer max) {
-        return position = gerador.nextDouble() * max;
+        else
+            this.x = 700;
+        super.posiciona();
     }
 
     @Override
-    public void mover(Window janela) {
+    public void mover(Window janela, Double moreFast) {
+
         if (tipo == 1) {
             if (this.y >= 10)
-                this.y -= 0.5;
+                this.y -= moreFast; // 0.5
+            else
+                tipo = 2;
         } else if (tipo == 2) {
             if (this.y <= 520)
-                this.y += 0.5;
+                this.y += moreFast;
+            else
+                tipo = 1;
         }
         // this.x -= VELOCIDADE + 1;
-        this.x -= VELOCIDADE + 0.3;
+        // this.x -= VELOCIDADE + 0.3;
+        this.x -= (VELOCIDADE + moreFast);
 
         update();
 
-        if (this.x <= -200)
-            this.visivel = false;
+        if (this.x <= -200) {
+            this.visible = false;
+        }
     }
 
 }
-
-// if (tipo == 1) {
-// if (this.y >= 10)
-// this.y -= VELOCIDADE;
-// else
-// this.y += 1;
-// } else {
-// if (this.y <= 520)
-// this.y += VELOCIDADE;
-// else
-// this.y -= 2;
-// }

@@ -8,25 +8,30 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 
 import jplay.GameImage;
 import jplay.Keyboard;
 import jplay.Scene;
 import jplay.Sound;
+import jplay.Sprite;
 import jplay.Window;
 
 public class Cenario {
     private Window janela;
     private GameImage cena;
     private Jogador jogador;
-    private List<Nave> naves;
-    private static final Integer MAXENEMIE = 4;
-    private Integer fistGame = 0;
     private Tiro tiro;
-    private Integer bufferPoint = 0;
-    private boolean morre = false;
+    private Treasure treasure;
+    private Sprite heart[] = new Sprite[4];
     private Font font;
+    private List<Nave> naves;
+    private static final Integer MAXENEMIE = 2;
+    private Integer fistGame = 0;
+    private Integer morePoints = 50;
+    private Integer moreEnemies = 0;
+    private Integer bufferPoint = 0;
+    private Double moreFast = 0d;
+    private boolean dead = false;
 
     public Cenario(Window janela) {
         this.janela = janela;
@@ -57,11 +62,17 @@ public class Cenario {
     private void gerarInimigos() {
         naves = null;
         naves = new ArrayList<Nave>();
-        for (int i = 0; i < MAXENEMIE; i++) {
+        for (int i = 0; i < MAXENEMIE + 7; i++) {
             Integer y = this.random(520, 10);
             Integer enemie = this.random(1, 0);
-            Integer tipo = this.random(2, 1);
+            Integer tipo = this.random(2, 0);
             naves.add(new Nave(700, y, enemie, tipo));
+            if (i < 4) {
+                heart[i] = new Sprite("src/resource/img/heart.png", 1);
+                heart[i].x = 600 + (i * 43);
+                heart[i].y = 0;
+            }
+
         }
     }
 
@@ -71,21 +82,28 @@ public class Cenario {
     }
 
     public void iniciar() {
-        if (morre) {
-            while (morre) {
+        if (this.dead) {
+            while (this.dead) {
                 sair();
                 janela.drawText("GAME OVER", 290, 300, Color.white, this.font);
                 janela.update();
                 if (janela.getKeyboard().keyDown(Keyboard.ENTER_KEY))
-                    morre = false;
+                    this.dead = false;
             }
         }
+
         cena = new GameImage("/home/kainom/meusprojetos/game_nave/src/resource/img/starNave/fundoBlackh.jpg");
         jogador = new Jogador(0, 250);
         tiro = new Tiro("/home/kainom/meusprojetos/game_nave/src/resource/img/starNave/Fighter/Charge_1.png", 1);
+        treasure = new Treasure(700, this.random(520, 10), 0);
         this.fistGame = 1;
         this.bufferPoint = 0;
+        this.moreEnemies = 0;
+        this.moreFast = 0d;
+        this.morePoints = 50;
         this.gerarInimigos();
+        System.out.println(this.moreFast);
+
     }
 
     private void run() {
@@ -93,56 +111,92 @@ public class Cenario {
         while (true) {
             sair();
             cena.draw();
-            janela.drawText("Pontos: " + jogador.getPontuacao(), 20, 20, Color.white, this.font);
+            janela.drawText("Pontos: " + jogador.getPontuacao(), 20, 25, Color.white, this.font);
+            // janela.drawText("Life: " + jogador.getLife(), 600, 25, Color.white,
+            // this.font);
+            for (int i = 0; i < this.jogador.getLife(); i++)
+                heart[i].draw();
 
-            jogador.mover(janela);
+            if (jogador.getLife() == 0) { // verifica se o jogador perdeu
+                new Sound("/home/kainom/meusprojetos/game_nave/src/resource/music/explosionBit.wav").play();
+                this.dead = true;
 
-            if (bufferPoint == 10) {
-                new Sound("/home/kainom/meusprojetos/game_nave/src/resource/music/coinUp.wav").play();
-                bufferPoint = 0;
+                this.iniciar();
             }
+            jogador.mover(janela, 0d);
+
+            if (this.bufferPoint == 10) {
+                new Sound("/home/kainom/meusprojetos/game_nave/src/resource/music/coinUp.wav").play();
+                this.bufferPoint = 0;
+            }
+            if (this.morePoints <= 450)
+                if (jogador.getPontuacao() >= this.morePoints) {
+                    this.morePoints = this.morePoints + 50;
+                    if (this.moreFast <= 0.4)
+                        this.moreFast += 0.1d;
+                    if (this.moreEnemies < 9)
+                        this.moreEnemies = this.moreEnemies + 1;
+                    this.treasure.respawnTreasure();
+                }
 
             if (jogador.disparou(janela)) {
                 tiro.disparar(jogador.x + 90d, jogador.y + 25d);
                 if (tiro.isDisparo())
                     new Sound("/home/kainom/meusprojetos/game_nave/src/resource/music/laser1.wav").play();
             }
+
+            if (treasure.isVisible())
+                treasure.mover();
+
             if (tiro.isVisivel())
                 tiro.mover();
-            for (int i = 0; i < MAXENEMIE; i++) { // Atualizar inimigos
+
+            if (this.treasure.isVisible() && this.jogador.collided(treasure)) {
+                treasure.getTeasure();
+                this.jogador.SetPontuacao(30);
+                new Sound("/home/kainom/meusprojetos/game_nave/src/resource/music/collect.wav").play();
+            }
+
+            for (int i = 0; i < (MAXENEMIE + this.moreEnemies); i++) { // Atualizar inimigos
                 if (naves.get(i).isVisible())
-                    naves.get(i).mover(janela);
+                    naves.get(i).mover(janela, moreFast);
                 else {
-                    naves.get(i).setVisivel(true);
+                    naves.get(i).setVisible(true);
                     naves.get(i).posiciona(fistGame);
                     fistGame++;
                 }
             }
-            for (int i = 0; i < MAXENEMIE; i++) {
+            for (int i = 0; i < (MAXENEMIE + this.moreEnemies); i++) {
                 if (naves.get(i).isVisible()) {
-                    if (jogador.collided(naves.get(i))) { // jogador morre
-                        new Sound("/home/kainom/meusprojetos/game_nave/src/resource/music/explosionBit.wav").play();
-                        morre = true;
-                        this.iniciar();
+                    if (jogador.collided(naves.get(i))) { // jogador leva dano
+                        naves.get(i).atingido();
+                        naves.get(i).x = 700;
+                        this.jogador.setLife(1);
+                        new Sound("/home/kainom/meusprojetos/game_nave/src/resource/music/damage.wav").play();
+
                     }
                 }
             } // Atualizar inimigos
 
-            for (int i = 0; i < MAXENEMIE; i++) { // verificar morte de inimigos
+            for (int i = 0; i < (MAXENEMIE + this.moreEnemies); i++) { // verificar morte de inimigos
                 if (naves.get(i).isVisible())
                     if (tiro.isVisivel() && naves.get(i).collided(tiro)) {
                         tiro.atingiu();
                         naves.get(i).atingido();
-                        jogador.SetPontuacao();
+                        jogador.SetPontuacao(5);
                         bufferPoint += 5;
                         new Sound("//home/kainom/meusprojetos/game_nave/src/resource/music/explosionBit.wav").play();
                     }
             }
 
             jogador.draw(); // printar na tela
+
+            if (treasure.isVisible())
+                treasure.draw();
             if (tiro.isVisivel())
                 tiro.draw();
-            for (int i = 0; i < MAXENEMIE; i++) {
+
+            for (int i = 0; i < (MAXENEMIE + this.moreEnemies); i++) {
                 if (naves.get(i).isVisible())
                     naves.get(i).draw();
             }

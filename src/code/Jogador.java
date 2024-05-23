@@ -46,8 +46,8 @@ public class Jogador extends Ator {
         return this.pontuacao;
     }
 
-    public void SetPontuacao() {
-        this.pontuacao += 5;
+    public void SetPontuacao(Integer valor) {
+        this.pontuacao += valor;
     }
 
     public void movimentaAdjunta(Keyboard teclado, Window janela) {
@@ -60,7 +60,7 @@ public class Jogador extends Ator {
         }
     }
 
-    public void mover(Window janela) {
+    public void mover(Window janela,Double moreFast) {
         if (teclado == null) {
             teclado = janela.getKeyboard();
         }
