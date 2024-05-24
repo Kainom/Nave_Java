@@ -194,7 +194,7 @@ public class Cenario {
             for (int i = 0; i < (MAXENEMIE + this.moreEnemies); i++) {
                 if (naves.get(i).isVisible()) {
                     if (jogador.collided(naves.get(i))) { // jogador leva dano
-                        naves.get(i).atingido(true);
+                        naves.get(i).atingido(gi);
                         naves.get(i).x = 700;
                         this.jogador.setDano(1);
 
@@ -206,8 +206,12 @@ public class Cenario {
                 if (naves.get(i).isVisible())
                     if (tiro.isVisivel() && naves.get(i).collided(tiro)) {
                         tiro.atingiu();
-                        naves.get(i).atingido(false);
+                        naves.get(i).atingido();
                         jogador.SetPontuacao(5);
+                        som = new Sound("/home/kainom/meusprojetos/game_nave/src/resource/music/explosionBit.wav");
+                        som.decreaseVolume(15);
+                        som.play();
+                        som = null;
                         bufferPoint += 5;
                     }
             }
