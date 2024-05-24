@@ -10,6 +10,7 @@ public class Nave extends Ator {
     private Integer tipo;
     private static final String vet[] = { "src/resource/img/nave.png",
             "/home/kainom/meusprojetos/game_nave/src/resource/img/inimigo.png" };
+    private Sound som;
 
     public Nave(int x, int y, int enemie, Integer tipo) {
         super(vet[enemie], 1);
@@ -28,9 +29,17 @@ public class Nave extends Ator {
 
     }
 
-    public void atingido() {
+    public void atingido(Boolean acertouPlayer) {
         this.visible = false;
         tipo = random(2).intValue();
+        this.x = 700;
+        if (!acertouPlayer) {
+            som = new Sound("/home/kainom/meusprojetos/game_nave/src/resource/music/explosionBit.wav");
+            som.decreaseVolume(15);
+            som.play();
+            som = null;
+        }
+
     }
 
     public void posiciona(Integer firtsGame) {

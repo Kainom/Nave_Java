@@ -7,7 +7,7 @@ import jplay.Sprite;
 import jplay.Window;
 
 public abstract class Ator extends Sprite {
-    protected static final Double VELOCIDADE = 0.5;
+    protected static final Double VELOCIDADE = 0.3;
     protected Integer direcao = 3;
     protected boolean movendo = false;
     protected Random gerador = new Random();

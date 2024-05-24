@@ -13,9 +13,9 @@ public class App {
 
         while (true) {
             music = new Sound("src/resource/music/starWars.wav");
-            music.play();
-            music.setRepeat(true);
-            music.decreaseVolume(5);
+            // music.play();
+            // music.setRepeat(true);
+            // music.decreaseVolume(15);
             window.update();
             new Cenario(window);
         }

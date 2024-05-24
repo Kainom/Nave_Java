@@ -1,10 +1,12 @@
 package code;
 
+import jplay.Sound;
 import jplay.Sprite;
 
 public class Tiro extends Sprite {
     private boolean visivel;
-    private Double velocidade = 1.7d;
+    // private Double velocidade = 2.7d;
+    private Double velocidade = 1d;
     private boolean disparo = false;
 
     public Tiro(String fileName, int numFrames) {
@@ -14,6 +16,11 @@ public class Tiro extends Sprite {
 
     public boolean isVisivel() {
         return visivel;
+    }
+
+    public void setVelocidade() {
+        if (this.velocidade < 1.2)
+            this.velocidade += 0.2;
     }
 
     public boolean isDisparo() {
@@ -30,6 +37,11 @@ public class Tiro extends Sprite {
             this.y = y;
             this.visivel = true;
             this.disparo = true;
+            Sound som = new Sound("/home/kainom/meusprojetos/game_nave/src/resource/music/laser1.wav");
+            som.decreaseVolume(20);
+            som.play();
+            som = null;
+
         }
     }
 

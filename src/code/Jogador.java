@@ -8,6 +8,7 @@ import java.util.List;
 
 import jplay.GameObject;
 import jplay.Keyboard;
+import jplay.Sound;
 import jplay.Sprite;
 
 public class Jogador extends Ator {
@@ -38,8 +39,24 @@ public class Jogador extends Ator {
         return this.life;
     }
 
-    public void setLife(Integer dano) {
+    public void setDano(Integer dano) {
         this.life -= dano;
+        Sound som = new Sound("/home/kainom/meusprojetos/game_nave/src/resource/music/damage.wav");
+        som.decreaseVolume(13);
+        som.play();
+        som = null;
+
+    }
+
+    public void heal() {
+        if (this.life > 0 && this.life < 4) {
+            this.life++;
+            Sound som = new Sound("src/resource/music/heal.wav");
+            som.decreaseVolume(13);
+            som.play();
+            som = null;
+        }
+
     }
 
     public Integer getPontuacao() {
@@ -60,7 +77,7 @@ public class Jogador extends Ator {
         }
     }
 
-    public void mover(Window janela,Double moreFast) {
+    public void mover(Window janela, Double moreFast) {
         if (teclado == null) {
             teclado = janela.getKeyboard();
         }
@@ -109,7 +126,6 @@ public class Jogador extends Ator {
             movendo = false;
         }
 
-      
         // janela.update();
 
     }
