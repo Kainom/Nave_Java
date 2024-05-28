@@ -41,7 +41,7 @@ public class Jogador extends Ator {
 
     public void setDano(Integer dano) {
         this.life -= dano;
-        Sound som = new Sound("/home/kainom/meusprojetos/game_nave/src/resource/music/damage.wav");
+        Sound som = new Sound("src/resource/music/damage.wav");
         som.decreaseVolume(13);
         som.play();
         som = null;

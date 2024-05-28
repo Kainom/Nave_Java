@@ -9,7 +9,7 @@ public class Nave extends Ator {
     private boolean visible = true;
     private Integer tipo;
     private static final String vet[] = { "src/resource/img/nave.png",
-            "/home/kainom/meusprojetos/game_nave/src/resource/img/inimigo.png" };
+            "src/resource/img/inimigo.png"};
     private Sound som;
 
     public Nave(int x, int y, int enemie, Integer tipo) {

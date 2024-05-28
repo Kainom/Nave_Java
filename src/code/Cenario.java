@@ -48,8 +48,7 @@ public class Cenario {
         try {
             Font customFont = Font
                     .createFont(Font.TRUETYPE_FONT,
-                            new File(
-                                    "/home/kainom/meusprojetos/game_nave/src/resource/emulogic-font/Emulogic-zrEw.ttf"))
+                            new File("src/resource/emulogic-font/Emulogic-zrEw.ttf"))
                     .deriveFont(24f);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             ge.registerFont(customFont);
@@ -105,9 +104,9 @@ public class Cenario {
             }
         }
 
-        cena = new GameImage("/home/kainom/meusprojetos/game_nave/src/resource/img/starNave/fundoBlackh.jpg");
+        cena = new GameImage("src/resource/img/starNave/fundoBlackh.jpg");
         jogador = new Jogador(0, 250);
-        tiro = new Tiro("/home/kainom/meusprojetos/game_nave/src/resource/img/starNave/Fighter/Charge_1.png", 1);
+        tiro = new Tiro("src/resource/img/starNave/Fighter/Charge_1.png", 1);
         treasure = new Treasure(700, this.random(520, 10), 0, jogador);
         treasures = Arrays.asList(new Treasure(700, this.random(520, 10), 0, jogador),
                 new Life(700, this.random(520, 10), 1, jogador));
@@ -142,7 +141,7 @@ public class Cenario {
             jogador.mover(janela, 0d);
 
             if (this.bufferPoint == 20) {
-                Sound som = new Sound("/home/kainom/meusprojetos/game_nave/src/resource/music/coinUp.wav");
+                Sound som = new Sound("src/resource/music/coinUp.wav");
                 som.decreaseVolume(8);
                 som.play();
                 som = null;
@@ -194,7 +193,7 @@ public class Cenario {
             for (int i = 0; i < (MAXENEMIE + this.moreEnemies); i++) {
                 if (naves.get(i).isVisible()) {
                     if (jogador.collided(naves.get(i))) { // jogador leva dano
-                        naves.get(i).atingido(gi);
+                        naves.get(i).atingido();
                         naves.get(i).x = 700;
                         this.jogador.setDano(1);
 
@@ -208,7 +207,7 @@ public class Cenario {
                         tiro.atingiu();
                         naves.get(i).atingido();
                         jogador.SetPontuacao(5);
-                        som = new Sound("/home/kainom/meusprojetos/game_nave/src/resource/music/explosionBit.wav");
+                        som = new Sound("src/resource/music/explosionBit.wav");
                         som.decreaseVolume(15);
                         som.play();
                         som = null;

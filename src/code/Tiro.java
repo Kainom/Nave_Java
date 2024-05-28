@@ -37,7 +37,7 @@ public class Tiro extends Sprite {
             this.y = y;
             this.visivel = true;
             this.disparo = true;
-            Sound som = new Sound("/home/kainom/meusprojetos/game_nave/src/resource/music/laser1.wav");
+            Sound som = new Sound("src/resource/music/laser1.wav");
             som.decreaseVolume(20);
             som.play();
             som = null;

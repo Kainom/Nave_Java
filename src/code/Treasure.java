@@ -11,7 +11,7 @@ import jplay.Window;
 public class Treasure extends Sprite {
     protected  static final Double VELOCIDADE = 0.2;
     private static final List<String> teasures = Arrays
-            .asList("/home/kainom/meusprojetos/game_nave/src/resource/img/astronaut.png","/home/kainom/meusprojetos/game_nave/src/resource/img/heart.png");
+            .asList("src/resource/img/astronaut.png","src/resource/img/heart.png");
     protected boolean visible;
     private Random gerador;
     protected Jogador jogador;
@@ -35,7 +35,7 @@ public class Treasure extends Sprite {
 
 public void bonus(){
     this.jogador.SetPontuacao(this.random(50).intValue());
-    new Sound("/home/kainom/meusprojetos/game_nave/src/resource/music/collect.wav").play();
+    new Sound("src/resource/music/collect.wav").play();
 
 }
 
