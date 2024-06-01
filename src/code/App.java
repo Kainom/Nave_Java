@@ -8,7 +8,6 @@ public class App {
 
     public static void main(String[] args) {
         Sound music;
-
         Window window = new Window(800, 600);
 
         while (true) {

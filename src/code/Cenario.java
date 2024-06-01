@@ -138,7 +138,7 @@ public class Cenario {
                 this.musicBack = null;
                 this.iniciar();
             }
-            jogador.mover(janela, 0d);
+            jogador.mover(janela, 0.5d);
 
             if (this.bufferPoint == 20) {
                 Sound som = new Sound("src/resource/music/coinUp.wav");
